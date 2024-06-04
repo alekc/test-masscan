@@ -1,9 +1,11 @@
-name: bb-actions-ports
+name: run ua
 
 on:
-  push:
-    paths:
-    - '.github/workflows/portscan-masscan.yml'
+  workflow_dispatch:
+    inputs:
+      country:
+        type: text
+        description: which country
 
 jobs:
   ports-masscan:
@@ -28,11 +30,11 @@ jobs:
 
 
       - name: Get CIDR list
-        run: wget https://raw.githubusercontent.com/herrbischoff/country-ip-blocks/master/ipv4/ua.cidr
+        run: wget https://raw.githubusercontent.com/herrbischoff/country-ip-blocks/master/ipv4/${{ github.event.inputs.country }}.cidr
 
       - name: Scan host
 #        run: sudo masscan -p 80,81,300,443,591,593,832,981,1010,1311,2082,2087,2095,2096,2480,3000,3333,4243,4567,4711,4712,4993,5000,5104,5108,5800,6543,7000,7396,7474,8000,8001,8008,8014,8042,8069,8080,8081,8088,8090,8091,8118,8123,8172,8222,8243,8280,8281,8333,8443,8500,8834,8880,8888,8983,9000,9043,9060,9080,9090,9091,9200,9443,9800,9981,12443,16080,18091,18092,20720,28017 -iL al.cidr -oL /tmp/masscan.txt --rate=10240
-        run: sudo masscan -p 3128 -iL ua.cidr -oL /tmp/masscan.txt --rate=10240
+        run: sudo masscan -p 3128 -iL ${{ github.event.inputs.country }}.cidr -oL /tmp/masscan.txt --rate=10240
 
       - name: Filter and sort IPs
         run: grep open /tmp/masscan.txt| awk '{print $4":"$3}' > outputs/$(date +'%Y-%m-%d').txt
