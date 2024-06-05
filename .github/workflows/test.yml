@@ -37,7 +37,7 @@ jobs:
         run: sudo masscan -p 3128 -iL ${{ github.event.inputs.country }}.cidr -oL /tmp/masscan.txt --rate=10240
 
       - name: Filter and sort IPs
-        run: grep open /tmp/masscan.txt| awk '{print $4":"$3}' > outputs/$(date +'%Y-%m-%d').txt
+        run: grep open /tmp/masscan.txt| awk '{print $4":"$3}' > $(date +'%Y-%m-%d').txt
 
       # - name: Set current date
       #   run: echo "NOW=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
